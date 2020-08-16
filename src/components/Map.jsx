@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
+import TreeInfo from './TreeInfo';
+import '../Map.css';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ2l0YWxpbmsiLCJhIjoiY2thbHJsNWloMTNmYzJ5bW54M3ZhY3pycyJ9.6AEc1-JrLZHIYMwmuzTtQg';
 
@@ -74,9 +76,15 @@ export default () => {
 
   return (
     <div>
-      <h1>New York City Trees Mapped</h1>
-      <div ref={el=>mapContainer=el} className="mapContainer" />
-    </div>
+      <div className="Map-header">
+        <h1>NYC Trees</h1>
+        <p>About · Github · Dataset</p>
+      </div>
+      <div className="body">
+        <TreeInfo />
+        <div ref={el=>mapContainer=el} className="mapContainer" />
+      </div>
+      </div>
   );
 };
 
