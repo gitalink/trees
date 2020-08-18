@@ -1,3 +1,13 @@
+## About 
+
+
+NYC Trees is a web app for New Yorkers who are curious to know more about the trees around them. 
+
+The application visualizes
+[2015 NYC Tree Census dataset ](https://dev.socrata.com/foundry/data.cityofnewyork.us/5rq2-4hqu) on an interective map. 
+
+##
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
