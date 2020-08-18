@@ -6,9 +6,11 @@ NYC Trees is a web app for New Yorkers who are curious to know more about the tr
 The application visualizes
 [2015 NYC Tree Census dataset ](https://dev.socrata.com/foundry/data.cityofnewyork.us/5rq2-4hqu) on an interective map. 
 
+See it live [here](https://trees-nine.vercel.app).
+
 ##
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and it is utilizing Mapbox GL JS. 
 
 ## Available Scripts
 
