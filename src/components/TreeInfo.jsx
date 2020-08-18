@@ -17,7 +17,7 @@ export default () => {
 
       <div className="detail">
         <p className="detail-header">Health: </p>
-        <p>China</p>
+        <p>Healthy</p>
       </div>
 
     </div>

@@ -78,10 +78,10 @@ export default () => {
     <div>
       <div className="Map-header">
         <h1>NYC Trees</h1>
-        <p>About · Github · Dataset</p>
+        <p> About · <a href="">Github</a> · <a href="https://dev.socrata.com/foundry/data.cityofnewyork.us/5rq2-4hqu">Dataset</a></p>
       </div>
       <div className="body">
-        <TreeInfo />
+        {/* <TreeInfo /> */}
         <div ref={el=>mapContainer=el} className="mapContainer" />
       </div>
       </div>
