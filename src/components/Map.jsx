@@ -9,7 +9,7 @@ export default () => {
   const [state, setState] = useState({
     lat: 40.748360,
     lng: -73.985402,
-    zoom: 10
+    zoom: 14
   });
 
   let mapContainer;
@@ -34,7 +34,9 @@ export default () => {
         'source': 'trees',
         'source-layer': 'trees',
         'paint': {
-          'circle-radius': 7,
+          'circle-radius': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false], 15, 7],
           'circle-color': '#2b9348',
           'circle-stroke-color': '#007f5f',
           'circle-stroke-width': 1,
@@ -71,6 +73,56 @@ export default () => {
           labelsShown = false;
         }
       })
+
+      let treeId = null
+
+      map.on('mousemove', 'trees-id', (e) => {
+        map.getCanvas().style.cursor = 'pointer'
+
+        if (treeId) {
+          map.removeFeatureState({
+            source: 'trees',
+            sourceLayer: 'trees',
+            layer: 'trees-id',
+            id: treeId
+          })
+        }
+
+        treeId = e.features[0].id
+        let commonName = e.features[0].properties.spc_common
+        let latinName = e.features[0].properties.spc_latin
+        let treeHealth = e.features[0].properties.health
+        let address = e.features[0].properties.address
+       // let steward = e.features[0].propertis.steward
+        let problems = e.features[0].properties.problems
+        console.log('TREEID', treeId)
+        console.log('properties', e.features[0].properties.spc_latin, latinName)
+        console.log(e.features[0])
+
+        map.setFeatureState({
+          source: 'trees',
+          sourceLayer: 'trees',
+          layer: 'trees-id',
+          id: treeId
+        }, {
+          hover: true
+        })
+
+      })
+
+      map.on('mouseleave', 'tree-id', function () {
+        if (treeId) {
+          map.setFeatureState({
+            source: 'trees',
+            sourceLayer: 'trees',
+            layer: 'trees-id',
+            id: treeId
+          }, {
+            hover: false
+          })
+        }
+      })
+
     })
   }, [state]);
 
@@ -88,32 +140,3 @@ export default () => {
   );
 };
 
-// class Map extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//       lng: 5,
-//       lat: 34,
-//       zoom: 2
-//     }
-//   }
-
-//   componentDidMount() {
-//     const map = new mapboxgl.Map({
-//       container: this.mapContainer,
-//       style: 'mapbox://styles/mapbox/streets-v11',
-//       center: [this.state.lng, this.state.lat],
-//       zoom: this.state.zoom
-//     })
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <div ref={el=>this.mapContainer=el} className="mapContainer" />
-//       </div>
-//     )
-//   }
-// }
-
-// export default Map
