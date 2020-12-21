@@ -1,16 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
+import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationArrow, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import TreeInfo from './TreeInfo';
 import '../Map.css';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiZ2l0YWxpbmsiLCJhIjoiY2thbHJsNWloMTNmYzJ5bW54M3ZhY3pycyJ9.6AEc1-JrLZHIYMwmuzTtQg';
 
 export default () => {
-  const [state, setState] = useState({
+  const [coords, setCoords] = useState({
     lat: 40.748360,
     lng: -73.985402,
     zoom: 14
   });
+
+  const [commonName, setCommonName] = useState('')
+  const [latinName, setLatinName] = useState('')
+  const [treeHealth, setTreeHealth] = useState('')
+  const [address, setAddress] = useState('')
+  const [problems, setProblems] = useState('')
+  const [treeInfoVisibility, setTreeInfoVisibility] = useState(false);
+
+  const GoToCurrentLocation = () => {
+    if (!navigator.geolocation) return alert('Geolocation not available.');
+
+    navigator.geolocation.getCurrentPosition((p) => {
+      setCoords({ lat: p.coords.latitude, lng: p.coords.longitude, zoom: 18 })
+    });
+  };
+
 
   let mapContainer;
 
@@ -18,9 +37,18 @@ export default () => {
     const map = new mapboxgl.Map({
       container: mapContainer,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [state.lng, state.lat],
-      zoom: state.zoom
+      center: [coords.lng, coords.lat],
+      zoom: coords.zoom
     })
+
+    map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true,
+    }));
+
+    map.addControl(new mapboxgl.NavigationControl())
 
     map.on('load', () => {
       map.addSource('trees', {
@@ -42,6 +70,8 @@ export default () => {
           'circle-stroke-width': 1,
         }
       })
+
+
 
       let labelsShown = false;
 
@@ -89,12 +119,16 @@ export default () => {
         }
 
         treeId = e.features[0].id
-        let commonName = e.features[0].properties.spc_common
-        let latinName = e.features[0].properties.spc_latin
-        let treeHealth = e.features[0].properties.health
-        let address = e.features[0].properties.address
-       // let steward = e.features[0].propertis.steward
-        let problems = e.features[0].properties.problems
+
+        setCommonName(e.features[0].properties.spc_common)
+        setLatinName(e.features[0].properties.spc_latin)
+        setTreeHealth(e.features[0].properties.health)
+        setAddress(e.features[0].properties.address)
+        setProblems(e.features[0].properties.problems)
+
+        console.log('COMMON NAME', commonName)
+
+
         console.log('TREEID', treeId)
         console.log('properties', e.features[0].properties.spc_latin, latinName)
         console.log(e.features[0])
@@ -120,23 +154,51 @@ export default () => {
           }, {
             hover: false
           })
+          setCommonName('')
+          setLatinName('')
+          setTreeHealth('')
+          setAddress('')
+          setProblems('')
         }
       })
 
     })
-  }, [state]);
+  }, [coords]);
 
   return (
     <div>
-      <div className="Map-header">
-        <h1>NYC Trees</h1>
-        <p> About · <a href="">Github</a> · <a href="https://dev.socrata.com/foundry/data.cityofnewyork.us/5rq2-4hqu">Dataset</a></p>
-      </div>
       <div className="body">
-        {/* <TreeInfo /> */}
+        <SideInfo>
+          <div className="Map-header">
+            <h1>NYC Trees</h1>
+            <p><a href="https://github.com/gitalink">Github</a> · <a href="https://dev.socrata.com/foundry/data.cityofnewyork.us/5rq2-4hqu">Dataset</a></p>
+          </div>
+          {/* <LocationBtn onClick={GoToCurrentLocation}>
+            <FontAwesomeIcon icon={faLocationArrow} style={{fontSize: '1.3em'}} />
+          </LocationBtn> */}
+        </SideInfo>
+        <TreeInfo hidden={treeInfoVisibility} latinName={latinName} commonName={commonName} health={treeHealth} />
         <div ref={el=>mapContainer=el} className="mapContainer" />
       </div>
-      </div>
+    </div>
   );
 };
 
+const SideInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 9999;
+`;
+
+const LocationBtn = styled.button`
+  border: none;
+  width: 5em;
+  height: 5em;
+  margin: 1em;
+  border-radius: 5em;
+  cursor: pointer;
+  outline: none;
+  background: white;
+  box-shadow: 2px 2px 2px 0.5px #888888;
+`
