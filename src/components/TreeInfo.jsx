@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faWikipediaW } from '@fortawesome/free-brands-svg-icons';
+import Modal from './Wikipedia'
 
-import '../TreeInfo.css';
 
 export default (props) => {
+
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+
   return (
     <TreeInfo style={{ display: props.hidden ? 'none' : 'flex' }}>
       <Detail>
@@ -23,10 +26,11 @@ export default (props) => {
         <DetailHeader className="detail-header">Health: </DetailHeader>
         <DetailContent>{props.health || 'None'}</DetailContent>
       </Detail>
-      <IconContainer className="fa-stack">
+      <IconContainer className="fa-stack" onClick={() => setModalIsOpen(!modalIsOpen)}>
         <FontAwesomeIcon icon={faCircle} className="fa-stack-2x" />
         <WikipediaIcon className="fa-stack-1x" />
       </IconContainer>
+      <Modal modalIsOpen = {modalIsOpen} setModalIsOpen = {setModalIsOpen} latinName = {props.latinName}/>
     </TreeInfo>
   )
 }
