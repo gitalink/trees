@@ -18,10 +18,10 @@ export default (props) => {
     });
 
     wikipedia.search(props.latinName, 1)
-      .then(res => wiki().page(res.results[0]))
+      .then(res => wikipedia.page(res.results[0]))
       .then(page => page.content())
       .then(content => setWikiInfo(content))
-      .catch(() => setWikiInfo([{title: 'Not found'}]))
+      .catch(() => setWikiInfo([{title: 'Failed to load'}]))
   }
 
   const closeModal = () => {
@@ -55,7 +55,7 @@ export default (props) => {
         contentLabel="Wikipedia information about this tree"
       >
         <button onClick = {closeModal}>x</button>
-        <h2>About {props.latinName.toLowerCase()} from Wikipedia</h2>
+        <h2>About {props.latinName} from Wikipedia</h2>
         {wikiInfo.map((content) => {
           return (
             <div>
